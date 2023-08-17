@@ -101,6 +101,28 @@ namespace FilmApi.Migrations
                     b.HasIndex("MovieId");
 
                     b.ToTable("CharacterMovie");
+
+                    b.HasData(
+                        new
+                        {
+                            CharacterId = 1,
+                            MovieId = 1
+                        },
+                        new
+                        {
+                            CharacterId = 1,
+                            MovieId = 2
+                        },
+                        new
+                        {
+                            CharacterId = 1,
+                            MovieId = 3
+                        },
+                        new
+                        {
+                            CharacterId = 2,
+                            MovieId = 4
+                        });
                 });
 
             modelBuilder.Entity("FilmApi.Models.Franchise", b =>
@@ -253,11 +275,13 @@ namespace FilmApi.Migrations
 
             modelBuilder.Entity("FilmApi.Models.Movie", b =>
                 {
-                    b.HasOne("FilmApi.Models.Franchise", null)
+                    b.HasOne("FilmApi.Models.Franchise", "Franchise")
                         .WithMany("movies")
                         .HasForeignKey("FranchiseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Franchise");
                 });
 
             modelBuilder.Entity("FilmApi.Models.Character", b =>

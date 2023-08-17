@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FilmApi.Migrations
 {
     [DbContext(typeof(FilmDbContext))]
-    [Migration("20230816131539_AddMockData3")]
-    partial class AddMockData3
+    [Migration("20230817121411_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -255,11 +255,13 @@ namespace FilmApi.Migrations
 
             modelBuilder.Entity("FilmApi.Models.Movie", b =>
                 {
-                    b.HasOne("FilmApi.Models.Franchise", null)
+                    b.HasOne("FilmApi.Models.Franchise", "Franchise")
                         .WithMany("movies")
                         .HasForeignKey("FranchiseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Franchise");
                 });
 
             modelBuilder.Entity("FilmApi.Models.Character", b =>

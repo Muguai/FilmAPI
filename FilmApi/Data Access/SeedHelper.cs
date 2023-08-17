@@ -39,5 +39,18 @@ namespace FilmApi.Data_Access
             return newFranchise;
         }
 
+        public static List<CharacterMovie> GetCharacterMovies()
+        {
+            List<CharacterMovie> newCharactherMovie = new()
+            {
+                new CharacterMovie() { CharacterId = 1, MovieId = 1},
+                new CharacterMovie() { CharacterId = 1, MovieId = 2},
+                new CharacterMovie() { CharacterId = 1, MovieId = 3},
+                new CharacterMovie() { CharacterId = 2, MovieId = 4},
+            };
+
+            return newCharactherMovie;
+        }
+
     }
 }

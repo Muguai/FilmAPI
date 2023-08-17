@@ -25,6 +25,9 @@ namespace FilmApi.Models
 
         public int FranchiseId { get; set; }
 
+        public Franchise Franchise { get; set; }
+
+
         public ICollection<CharacterMovie> CharacterMovie { get; set; }
 
     }

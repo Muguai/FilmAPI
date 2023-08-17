@@ -1,3 +1,11 @@
+using FilmApi.Data_Access;
+using FilmApi.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
+
+
 namespace FilmApi
 {
     public class Program
@@ -10,8 +18,18 @@ namespace FilmApi
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+            builder.Services.AddDbContext<FilmDbContext>(opt =>
+                opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+            builder.Services.AddScoped<ICharacterService, CharacterService>();
+            builder.Services.AddScoped<IFranchiseService, FranchiseService>();
+
 
             var app = builder.Build();
 
@@ -25,7 +43,6 @@ namespace FilmApi
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

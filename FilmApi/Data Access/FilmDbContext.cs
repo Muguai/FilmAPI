@@ -5,8 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FilmApi.Data_Access
 {
-    internal class FilmDbContext : DbContext
+    public class FilmDbContext : DbContext
     {
+
+        public FilmDbContext(DbContextOptions options) : base(options)
+        {
+        }
+
+
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Franchise> Franchises { get; set; }
         public DbSet<Character> Characters { get; set; }
@@ -26,15 +32,8 @@ namespace FilmApi.Data_Access
             modelBuilder.Entity<Franchise>().HasData(SeedHelper.GetFranchises());
             modelBuilder.Entity<Movie>().HasData(SeedHelper.GetMovies());
             modelBuilder.Entity<Character>().HasData(SeedHelper.GetCharacters());
-            /*
-            modelBuilder.Entity<ProfessorQualification>().HasKey(pq => new { pq.ProfessorId, pq.QualificationId });
 
-            // Seeding domain entity tables
-            modelBuilder.Entity<Professor>().HasData(SeedHelper.GetProfessorSeeds());
-            modelBuilder.Entity<Qualification>().HasData(SeedHelper.GetQualificationSeeds());
-
-            // Seeding many to many
-            modelBuilder.Entity<ProfessorQualification>().HasData(SeedHelper.GetProfessorQualificationSeeds());
+            modelBuilder.Entity<CharacterMovie>().HasData(SeedHelper.GetCharacterMovies());
 
             //modelBuilder.Entity<Professor>()
             //    .HasMany(prof => prof.Qualifications)
@@ -49,7 +48,7 @@ namespace FilmApi.Data_Access
             //            je.HasData(SeedHelper.GetProfessorQualificationSeeds());
             //        }
             //    );
-            */
+
         }
 
         private string GetConnectionString()

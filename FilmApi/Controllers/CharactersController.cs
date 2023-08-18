@@ -42,6 +42,11 @@ namespace FilmApi.Controllers
 
 
         // GET: api/Characters/5
+        /// <summary>
+        /// Get a Character by Id.
+        /// </summary>
+        /// <param name="id">The Id of the Character you want to fetch.</param>
+        /// <returns>A Label.</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<ReadCharacterDto>> GetCharacter(int id)
         {
@@ -61,6 +66,12 @@ namespace FilmApi.Controllers
         }
 
         // PUT: api/Characters/5
+        /// <summary>
+        /// Update a Character.
+        /// </summary>
+        /// <param name="id">The Id of the Character you want to update.</param>
+        /// <param name="characterDto">The updated Character object.</param>
+        /// <returns>An Http status code depending on the outcome of the transaction.</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCharacter(int id, UpdateCharacterDto characterDto)
         {
@@ -86,6 +97,12 @@ namespace FilmApi.Controllers
             return NoContent();
         }
         // POST: api/Characters
+
+        /// <summary>
+        /// Add a new Character.
+        /// </summary>
+        /// <param name="characterDto">The new Character object.</param>
+        /// <returns>sThe newly created Character.</returns>
         [HttpPost]
         public async Task<ActionResult<ReadCharacterDto>> PostCharacter(CreateCharacterDto characterDto)
         {
@@ -96,7 +113,12 @@ namespace FilmApi.Controllers
             return CreatedAtAction("GetCharacter", characterId, characterDto);
         }
 
-        // DELETE: api/character/5
+        // DELETE: api/Character/5
+        /// <summary>
+        /// Delete a Character.
+        /// </summary>
+        /// <param name="id">The Id of the Character you want to delete.</param>
+        /// <returns>An Http status code depending on the outcome of the transaction.</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCharacter(int id)
         {
@@ -117,6 +139,11 @@ namespace FilmApi.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Checks if character with specfied id exist in Db Context
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>True/False if character Do exist/Dont exist</returns>
         private async Task<bool> CharacterExistsAsync(int id)
         {
             return await _service.ExistsWithIdAsync(id);

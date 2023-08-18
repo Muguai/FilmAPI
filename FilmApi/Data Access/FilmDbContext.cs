@@ -21,7 +21,6 @@ namespace FilmApi.Data_Access
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(GetConnectionString());
-            //optionsBuilder.UseSqlServer("Data Source=localhost\\SQLEXPRESS; Initial Catalog=PostGradDb; Integrated Security=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,23 +33,12 @@ namespace FilmApi.Data_Access
             modelBuilder.Entity<Character>().HasData(SeedHelper.GetCharacters());
 
             modelBuilder.Entity<CharacterMovie>().HasData(SeedHelper.GetCharacterMovies());
-
-            //modelBuilder.Entity<Professor>()
-            //    .HasMany(prof => prof.Qualifications)
-            //    .WithMany(qual => qual.Professors)
-            //    .UsingEntity<Dictionary<string, object>>(
-            //        "ProfessorQualifications",
-            //        r => r.HasOne<Qualification>().WithMany().HasForeignKey("QualificationsId"),
-            //        l => l.HasOne<Professor>().WithMany().HasForeignKey("ProfessorsId"),
-            //        je =>
-            //        {
-            //            je.HasKey("ProfessorsId", "QualificationsId");
-            //            je.HasData(SeedHelper.GetProfessorQualificationSeeds());
-            //        }
-            //    );
-
         }
 
+        /// <summary>
+        /// Gets connection string to sql server
+        /// </summary>
+        /// <returns>Connection string</returns>
         private string GetConnectionString()
         {
             SqlConnectionStringBuilder builder = new()

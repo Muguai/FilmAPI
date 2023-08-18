@@ -4,6 +4,10 @@ namespace FilmApi.Data_Access
 {
     public class SeedHelper
     {
+        /// <summary>
+        /// Get a list of mock data for movies
+        /// </summary>
+        /// <returns>List of movie mock data</returns>
         public static List<Movie> GetMovies()
         {
             List<Movie> newMovie = new() {
@@ -16,6 +20,11 @@ namespace FilmApi.Data_Access
             return newMovie;
         }
 
+
+        /// <summary>
+        /// Get a list of mock data for characters
+        /// </summary>
+        /// <returns>List of characters mock data</returns>
         public static List<Character> GetCharacters()
         {
             List<Character> newCharacters = new() {
@@ -28,6 +37,11 @@ namespace FilmApi.Data_Access
             return newCharacters;
         }
 
+
+        /// <summary>
+        /// Get a list of mock data for franchise
+        /// </summary>
+        /// <returns>List of franchise mock data</returns>
         public static List<Franchise> GetFranchises()
         {
             List<Franchise> newFranchise = new() {
@@ -39,6 +53,10 @@ namespace FilmApi.Data_Access
             return newFranchise;
         }
 
+        /// <summary>
+        /// Get a list of mock data for CharacterMovie link table
+        /// </summary>
+        /// <returns>List of CharacterMovie mock data</returns>
         public static List<CharacterMovie> GetCharacterMovies()
         {
             List<CharacterMovie> newCharactherMovie = new()

@@ -51,7 +51,7 @@ namespace FilmApi.Services
 
         }
 
-        public async Task<Movie> GetCharactersMovieLinkTableAsync(int id)
+        public async Task<Movie> IncludeCharacterMovieAsync(int id)
         {
             return await _context.Movies
                     .Include(m => m.CharacterMovie)
@@ -78,7 +78,7 @@ namespace FilmApi.Services
             await UpdateAsync(movie);
         }
 
-        public async Task<IEnumerable<Character>> getAllCharactersInMovie(Movie movie)
+        public async Task<IEnumerable<Character>> getAllCharactersInMovieAsync(Movie movie)
         {
             List<Character> characters = new();
 

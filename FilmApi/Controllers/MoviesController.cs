@@ -28,9 +28,14 @@ namespace FilmApi.Controllers
             _mapper = mapper;
         }
 
-        // GET: api/Characters
+        // GET: api/Movies
+        /// <summary>
+        /// Get all movies.
+        /// </summary>
+        /// <returns>An array of movie dtos.</returns>
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ReadMovieDto>>> GetCharacter()
+        public async Task<ActionResult<IEnumerable<ReadMovieDto>>> GetMovie()
         {
             var Movie = await _service.GetAllAsync();
             var MovieDto = _mapper.Map<List<ReadMovieDto>>(Movie);
@@ -39,7 +44,12 @@ namespace FilmApi.Controllers
         }
 
 
-        // GET: api/Characters/5
+        // GET: api/Movies/5
+        /// <summary>
+        /// Get a Movie by Id.
+        /// </summary>
+        /// <param name="id">The Id of the Movie you want to fetch.</param>
+        /// <returns>A Movie Dto.</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<ReadMovieDto>> GetMovie(int id)
         {
@@ -59,6 +69,12 @@ namespace FilmApi.Controllers
         }
 
         // PUT: api/Movies/5
+        /// <summary>
+        /// Update a Movie.
+        /// </summary>
+        /// <param name="id">The Id of the Movie you want to update.</param>
+        /// <param name="MovieDto">The updated Movie object.</param>
+        /// <returns>An Http status code depending on the outcome of the transaction.</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> PutMovie(int id, UpdateMovieDto MovieDto)
         {
@@ -84,11 +100,19 @@ namespace FilmApi.Controllers
             return NoContent();
         }
 
-   
+
+
+        // PUT: api/Movies/3/characters
+        /// <summary>
+        /// Update the Characters in a Movie.
+        /// </summary>
+        /// <param name="id">The Id of the Movie whose Characters you want to update.</param>
+        /// <param name="characterIds">A list of Ids of the Characters belonging to the Movie.</param>
+        /// <returns></returns>
         [HttpPut("{id}/characters")]
         public async Task<IActionResult> UpdateMovieCharacters(int id, [FromBody] IEnumerable<int> characterIds)
         {
-            var movie = await _service.GetCharactersMovieLinkTableAsync(id);
+            var movie = await _service.IncludeCharacterMovieAsync(id);
 
             if (movie == null)
             {
@@ -100,13 +124,17 @@ namespace FilmApi.Controllers
             return Ok();
         }
 
+        // GET: api/Movies/3/characters
+        /// <summary>
+        /// Get all the Characters in a movie
+        /// </summary>
+        /// <param name="id">The Id of the Movie whose Characters you want to get.</param>
+        /// <returns>List of character dtos</returns>
         [HttpGet("{id}/characters")]
-
         public async Task<ActionResult<IEnumerable<ReadCharacterDto>>> GetAllCharactersInMovie(int id)
         {
 
-
-            var movie = await _service.GetCharactersMovieLinkTableAsync(id);
+            var movie = await _service.IncludeCharacterMovieAsync(id);
 
             if (movie == null)
             {
@@ -114,7 +142,7 @@ namespace FilmApi.Controllers
             }
 
 
-            var characters = await _service.getAllCharactersInMovie(movie);
+            var characters = await _service.getAllCharactersInMovieAsync(movie);
             var CharacterDto = _mapper.Map<List<ReadCharacterDto>>(characters);
 
             return Ok(CharacterDto);
@@ -122,10 +150,14 @@ namespace FilmApi.Controllers
 
 
         // POST: api/Movie
+        /// <summary>
+        /// Add a new Movie.
+        /// </summary>
+        /// <param name="MovieDto">The new Movie object.</param>
+        /// <returns>sThe newly created Movie.</returns>
         [HttpPost]
         public async Task<ActionResult<ReadMovieDto>> PostMovie(CreateMovieDto MovieDto)
         {
-            // Map dto to domain object
             var Movie = _mapper.Map<Movie>(MovieDto);
             var MovieId = await _service.AddAsync(Movie);
 
@@ -133,6 +165,11 @@ namespace FilmApi.Controllers
         }
 
         // DELETE: api/Movie/5
+        /// <summary>
+        /// Delete a Movie.
+        /// </summary>
+        /// <param name="id">The Id of the Movie you want to delete.</param>
+        /// <returns>An Http status code depending on the outcome of the transaction.</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMovie(int id)
         {
@@ -153,7 +190,11 @@ namespace FilmApi.Controllers
             return NoContent();
         }
 
-
+        /// <summary>
+        /// Checks if movie with specfied id exist in Db Context
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>True/False if movie Do exist/Dont exist</returns>
         private async Task<bool> MovieExistsAsync(int id)
         {
             return await _service.ExistsWithIdAsync(id);

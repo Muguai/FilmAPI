@@ -1,6 +1,9 @@
 # Assignment 3: FilmAPI
 
-For this assignment we were to create a datastore and interface to store and manage movies, their characters and the movies franchises. 
+For this assignment we were to create a datastore and interface to store and manage movies, their characters and the movies franchises. The characters, movies and franschises follow business rules for 
+the assignment which show how the entities relationship with each other. One movie can have many characters, a charachter can appear in many movies and a movie belongs to only one franchise but a 
+franchise can contain many movies.
+
 The database called FilmDb that we created stores information about moviecharacters, the movies they appear in, and the franchises the movies belong to. 
 The FilmAPI project consists of an Entity Framework Code First workflow and an ASP.NET Core Web API in C#. The application consists of a database made in SQL Server through EF Core with a RESTful API. 
 We also integrated Swagger which was essential for testing the API and documentation. 

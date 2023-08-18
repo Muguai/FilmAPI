@@ -11,7 +11,7 @@ After implementation of the tables we moved on to Visual Studio and worked with 
 ## Installation
 
 To run the program make sure you have installed the following development environment and databasemanagement tools: \
-• Visual Studio 2022 with .NET 6. 
+• Visual Studio 2022 with .NET 6. \
 • SQL Server Management Studio
 
 ## Authors

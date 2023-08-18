@@ -50,5 +50,62 @@ namespace FilmApi.Services
 
 
         }
+
+        public async Task<Franchise> IncludeMovies(int id)
+        {
+            return await _context.Franchises
+                    .Include(m => m.movies)
+                    .FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+        public async Task<Franchise> IncludeCharacters(int id)
+        {
+           return await _context.Franchises
+                .Include(f => f.movies)
+                    .ThenInclude(m => m.CharacterMovie)
+                        .ThenInclude(cm => cm.Character)
+                .FirstOrDefaultAsync(f => f.Id == id);
+        }
+
+        public List<Character> GetCharacterInFranchise(Franchise franchise)
+        {
+            var franchiseCharacters = new List<Character>();
+
+            foreach (var movie in franchise.movies)
+            {
+                foreach (var characterMovie in movie.CharacterMovie)
+                {
+                    if (!franchiseCharacters.Contains(characterMovie.Character))
+                    {
+                        franchiseCharacters.Add(characterMovie.Character);
+                    }
+                }
+            }
+
+            return franchiseCharacters;
+        }
+
+
+        public async Task UpdateMoviesOnFranchise(Franchise franchise, IEnumerable<int> movieIds)
+        {
+            List<Movie> movies = new();
+
+            foreach (int movieId in movieIds)
+            {
+                var movie = await _context.Movies.FindAsync(movieId);
+
+                if (movie == null)
+                {
+                    throw new KeyNotFoundException($"Movie with id ${movieId} not found!");
+                }
+
+                movies.Add(movie);
+            }
+
+            franchise.movies = movies;
+
+            await UpdateAsync(franchise);
+        }
+
     }
 }

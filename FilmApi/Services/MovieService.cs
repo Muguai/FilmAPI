@@ -50,5 +50,49 @@ namespace FilmApi.Services
 
 
         }
+
+        public async Task<Movie> GetCharactersMovieLinkTableAsync(int id)
+        {
+            return await _context.Movies
+                    .Include(m => m.CharacterMovie)
+                    .FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+        public async Task UpdateCharactersInMovieAsync(Movie movie, IEnumerable<int> charactersIds) 
+        {
+            movie.CharacterMovie.Clear();
+
+            foreach (var characterId in charactersIds)
+            {
+                var character = await _context.Characters.FindAsync(characterId);
+                if (character != null)
+                {
+                    movie.CharacterMovie.Add(new CharacterMovie
+                    {
+                        Character = character,
+                        Movie = movie
+                    });
+                }
+            }
+
+            await UpdateAsync(movie);
+        }
+
+        public async Task<IEnumerable<Character>> getAllCharactersInMovie(Movie movie)
+        {
+            List<Character> characters = new();
+
+            foreach (CharacterMovie cm in movie.CharacterMovie)
+            {
+                var character = await _context.Characters.FindAsync(cm.CharacterId);
+
+                if (character != null)
+                {
+                    characters.Add(character);
+                }
+            }
+
+            return characters;
+        }
     }
 }

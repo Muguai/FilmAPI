@@ -10,6 +10,7 @@ using FilmApi.Models;
 using AutoMapper;
 using FilmApi.DTOs.Movie;
 using FilmApi.Services;
+using FilmApi.DTOs.Character;
 
 namespace FilmApi.Controllers
 {
@@ -82,6 +83,44 @@ namespace FilmApi.Controllers
 
             return NoContent();
         }
+
+   
+        [HttpPut("{id}/characters")]
+        public async Task<IActionResult> UpdateMovieCharacters(int id, [FromBody] IEnumerable<int> characterIds)
+        {
+            var movie = await _service.GetCharactersMovieLinkTableAsync(id);
+
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+            await _service.UpdateCharactersInMovieAsync(movie, characterIds);
+
+            return Ok();
+        }
+
+        [HttpGet("{id}/characters")]
+
+        public async Task<ActionResult<IEnumerable<ReadCharacterDto>>> GetAllCharactersInMovie(int id)
+        {
+
+
+            var movie = await _service.GetCharactersMovieLinkTableAsync(id);
+
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+
+            var characters = await _service.getAllCharactersInMovie(movie);
+            var CharacterDto = _mapper.Map<List<ReadCharacterDto>>(characters);
+
+            return Ok(CharacterDto);
+        }
+
+
         // POST: api/Movie
         [HttpPost]
         public async Task<ActionResult<ReadMovieDto>> PostMovie(CreateMovieDto MovieDto)

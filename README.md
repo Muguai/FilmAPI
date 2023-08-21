@@ -6,7 +6,7 @@ franchise can contain many movies.
 
 The database called FilmDb that we created stores information about moviecharacters, the movies they appear in, and the franchises the movies belong to. 
 The FilmAPI project consists of an Entity Framework Code First workflow and an ASP.NET Core Web API in C#. The application consists of a database made in SQL Server through EF Core with a RESTful API. 
-We integrated Swagger which was essential for testing the API and documentation, aswell as Docker to containurize the API. 
+We integrated Swagger which was essential for testing the API and documentation, aswell as Docker to containurize the API (Docker Hub: https://hub.docker.com/repository/docker/muguai/filmapi/general)
 
 We utilized pair programming for this assignment to practice efficient development. We started with creating the SQL database "FilmDb". In the database we added the tables necessary for the assignment.
 After implementation of the tables we moved on to Visual Studio and worked with Swagger aswell to test the data. 

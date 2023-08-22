@@ -26,7 +26,11 @@ namespace FilmApi.Services
         /// <returns>List of Characters</returns>
         public Task<IEnumerable<Character>> getAllCharactersInMovieAsync(Movie movie);
 
-
+        /// <summary>
+        /// Delete CharacterMovie ManyToMany Link table
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Task DeleteCharacterMovieAsync(int id);
 
 

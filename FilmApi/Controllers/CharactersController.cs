@@ -17,6 +17,9 @@ namespace FilmApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Produces("application/json")]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
     public class CharactersController : ControllerBase
     {
 
@@ -31,7 +34,12 @@ namespace FilmApi.Controllers
         }
 
         // GET: api/Characters
+        /// <summary>
+        /// Get all Characters.
+        /// </summary>
+        /// <returns>An array of Character dtos.</returns>
         [HttpGet]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<ReadCharacterDto>>> GetCharacter()
         {
             var character = await _service.GetAllAsync();
@@ -46,14 +54,14 @@ namespace FilmApi.Controllers
         /// Get a Character by Id.
         /// </summary>
         /// <param name="id">The Id of the Character you want to fetch.</param>
-        /// <returns>A Label.</returns>
+        /// <returns>A Character dto.</returns>
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<ReadCharacterDto>> GetCharacter(int id)
         {
-            // Use service to get album by id
             var character = await _service.GetByIdAsync(id);
 
-            // Check if found item is null
             if (character == null)
             {
                 return NotFound();
@@ -73,9 +81,11 @@ namespace FilmApi.Controllers
         /// <param name="characterDto">The updated Character object.</param>
         /// <returns>An Http status code depending on the outcome of the transaction.</returns>
         [HttpPut("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> PutCharacter(int id, UpdateCharacterDto characterDto)
         {
-            // Map dto to domain object
             var character = _mapper.Map<Character>(characterDto);
 
             try
@@ -104,9 +114,9 @@ namespace FilmApi.Controllers
         /// <param name="characterDto">The new Character object.</param>
         /// <returns>sThe newly created Character.</returns>
         [HttpPost]
+        [ProducesResponseType(201)]
         public async Task<ActionResult<ReadCharacterDto>> PostCharacter(CreateCharacterDto characterDto)
         {
-            // Map dto to domain object
             var character = _mapper.Map<Character>(characterDto);
             var characterId = await _service.AddAsync(character);
 
@@ -120,6 +130,9 @@ namespace FilmApi.Controllers
         /// <param name="id">The Id of the Character you want to delete.</param>
         /// <returns>An Http status code depending on the outcome of the transaction.</returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteCharacter(int id)
         {
             if (!await _service.ExistsWithIdAsync(id))
@@ -133,6 +146,8 @@ namespace FilmApi.Controllers
             {
                 return NotFound();
             }
+
+            await _service.DeleteCharacterMovieAsync(id);
 
             await _service.DeleteAsync(deletedEntity);
 

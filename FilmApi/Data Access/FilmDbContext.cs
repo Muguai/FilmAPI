@@ -18,11 +18,6 @@ namespace FilmApi.Data_Access
         public DbSet<Character> Characters { get; set; }
         public DbSet<CharacterMovie> CharacterMovie { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(GetConnectionString());
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CharacterMovie>().HasKey(pq => new { pq.CharacterId, pq.MovieId });
@@ -35,22 +30,6 @@ namespace FilmApi.Data_Access
             modelBuilder.Entity<CharacterMovie>().HasData(SeedHelper.GetCharacterMovies());
         }
 
-        /// <summary>
-        /// Gets connection string to sql server
-        /// </summary>
-        /// <returns>Connection string</returns>
-        private string GetConnectionString()
-        {
-            SqlConnectionStringBuilder builder = new()
-            {
-                DataSource = "localhost\\SQLEXPRESS",
-                InitialCatalog = "FilmDb",
-                IntegratedSecurity = true,
-                TrustServerCertificate = true,
-            };
-
-            return builder.ConnectionString;
-        }
     }
 }
 

@@ -27,5 +27,8 @@ namespace FilmApi.Services
         public Task<IEnumerable<Character>> getAllCharactersInMovieAsync(Movie movie);
 
 
+        public Task DeleteCharacterMovieAsync(int id);
+
+
     }
 }

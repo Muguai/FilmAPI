@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  filmapi:
+    image: ${DOCKER_REGISTRY-}filmapi
+    build:
+      context: .
+      dockerfile: FilmApi\Dockerfile
+    ports:
+      - "8081:8080" 

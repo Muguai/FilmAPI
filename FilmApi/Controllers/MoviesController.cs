@@ -16,6 +16,9 @@ namespace FilmApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Produces("application/json")]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
     public class MoviesController : ControllerBase
     {
         private readonly IMovieService _service;
@@ -35,6 +38,7 @@ namespace FilmApi.Controllers
         /// <returns>An array of movie dtos.</returns>
 
         [HttpGet]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<ReadMovieDto>>> GetMovie()
         {
             var Movie = await _service.GetAllAsync();
@@ -51,18 +55,17 @@ namespace FilmApi.Controllers
         /// <param name="id">The Id of the Movie you want to fetch.</param>
         /// <returns>A Movie Dto.</returns>
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<ReadMovieDto>> GetMovie(int id)
         {
-            // Use service to get album by id
             var Movie = await _service.GetByIdAsync(id);
 
-            // Check if found item is null
             if (Movie == null)
             {
                 return NotFound();
             }
 
-            // Map domain to dto
             var MovieDto = _mapper.Map<ReadMovieDto>(Movie);
 
             return Ok(MovieDto);
@@ -76,6 +79,9 @@ namespace FilmApi.Controllers
         /// <param name="MovieDto">The updated Movie object.</param>
         /// <returns>An Http status code depending on the outcome of the transaction.</returns>
         [HttpPut("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> PutMovie(int id, UpdateMovieDto MovieDto)
         {
             // Map dto to domain object
@@ -110,6 +116,8 @@ namespace FilmApi.Controllers
         /// <param name="characterIds">A list of Ids of the Characters belonging to the Movie.</param>
         /// <returns></returns>
         [HttpPut("{id}/characters")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> UpdateMovieCharacters(int id, [FromBody] IEnumerable<int> characterIds)
         {
             var movie = await _service.IncludeCharacterMovieAsync(id);
@@ -131,6 +139,8 @@ namespace FilmApi.Controllers
         /// <param name="id">The Id of the Movie whose Characters you want to get.</param>
         /// <returns>List of character dtos</returns>
         [HttpGet("{id}/characters")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<IEnumerable<ReadCharacterDto>>> GetAllCharactersInMovie(int id)
         {
 
@@ -156,6 +166,7 @@ namespace FilmApi.Controllers
         /// <param name="MovieDto">The new Movie object.</param>
         /// <returns>sThe newly created Movie.</returns>
         [HttpPost]
+        [ProducesResponseType(201)]
         public async Task<ActionResult<ReadMovieDto>> PostMovie(CreateMovieDto MovieDto)
         {
             var Movie = _mapper.Map<Movie>(MovieDto);
@@ -171,6 +182,9 @@ namespace FilmApi.Controllers
         /// <param name="id">The Id of the Movie you want to delete.</param>
         /// <returns>An Http status code depending on the outcome of the transaction.</returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteMovie(int id)
         {
             if (!await _service.ExistsWithIdAsync(id))
@@ -185,7 +199,12 @@ namespace FilmApi.Controllers
                 return NotFound();
             }
 
+
+            await _service.DeleteCharacterMovieAsync(id);
+
             await _service.DeleteAsync(deletedEntity);
+            
+
 
             return NoContent();
         }

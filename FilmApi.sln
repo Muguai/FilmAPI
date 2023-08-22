@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmApi", "FilmApi\FilmApi.csproj", "{66C0EA1D-B763-4E64-B134-7465CF0A7EBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilmApi", "FilmApi\FilmApi.csproj", "{66C0EA1D-B763-4E64-B134-7465CF0A7EBE}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{66CE16A1-9FAE-4BFD-8342-7A1049C78139}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{66C0EA1D-B763-4E64-B134-7465CF0A7EBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66C0EA1D-B763-4E64-B134-7465CF0A7EBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66C0EA1D-B763-4E64-B134-7465CF0A7EBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66CE16A1-9FAE-4BFD-8342-7A1049C78139}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66CE16A1-9FAE-4BFD-8342-7A1049C78139}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66CE16A1-9FAE-4BFD-8342-7A1049C78139}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66CE16A1-9FAE-4BFD-8342-7A1049C78139}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

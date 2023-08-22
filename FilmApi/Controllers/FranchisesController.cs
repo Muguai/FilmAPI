@@ -17,13 +17,13 @@ namespace FilmApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Produces("application/json")]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(500)]
     public class FranchisesController : ControllerBase
     {
-
-
         private readonly IFranchiseService _service;
         private readonly IMapper _mapper;
-
 
         public FranchisesController(IFranchiseService service, IMapper mapper)
         {
@@ -37,6 +37,7 @@ namespace FilmApi.Controllers
         /// </summary>
         /// <returns>An array of Franchise dtos.</returns>
         [HttpGet]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<ReadFranchiseDto>>> GetFranchise()
         {
             var franchise = await _service.GetAllAsync();
@@ -44,6 +45,7 @@ namespace FilmApi.Controllers
 
             return Ok(franchiseDto);
         }
+
         // GET: api/Franchise/5
         /// <summary>
         /// Get a Franchise by Id.
@@ -51,18 +53,17 @@ namespace FilmApi.Controllers
         /// <param name="id">The Id of the Franchise you want to fetch.</param>
         /// <returns>A Franchise.</returns>
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<ReadFranchiseDto>> GetFranchise(int id)
         {
-            // Use service to get album by id
             var franchise = await _service.GetByIdAsync(id);
 
-            // Check if found item is null
             if (franchise == null)
             {
                 return NotFound();
             }
 
-            // Map domain to dto
             var franchiseDto = _mapper.Map<ReadFranchiseDto>(franchise);
 
             return Ok(franchiseDto);
@@ -76,12 +77,12 @@ namespace FilmApi.Controllers
         /// <param name="id">The Id of the Franchise whose movies you want to fetch.</param>
         /// <returns>An array of movie dtos.</returns>
         [HttpGet("{id}/movies")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<IEnumerable<ReadMovieDto>>> GetMoviesInFranchise(int id)
         {
-            // Use service to get album by id
             var franchise = await _service.GetByIdAsync(id);
 
-            // Check if found item is null
             if (franchise == null)
             {
                 return NotFound();
@@ -102,6 +103,8 @@ namespace FilmApi.Controllers
         /// <param name="id">The Id of the Franchise whose characters you want to fetch.</param>
         /// <returns>An array of character dtos.</returns>
         [HttpGet("{id}/characters")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<IEnumerable<ReadCharacterDto>>> GetCharactersInFranchise(int id)
         {
             var franchise = await _service.IncludeCharacters(id);
@@ -133,6 +136,9 @@ namespace FilmApi.Controllers
         /// <param name="labelDto">The updated Franchise object.</param>
         /// <returns>An Http status code depending on the outcome of the transaction.</returns>
         [HttpPut("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> PutFranchise(int id, UpdateFranchiseDto franchiseDto)
         {
             // Map dto to domain object
@@ -157,22 +163,6 @@ namespace FilmApi.Controllers
             return NoContent();
         }
 
-        // POST: api/Franchise
-        /// <summary>
-        /// Add a new Franchise.
-        /// </summary>
-        /// <param name="franchiseDto">The new Franchise object.</param>
-        /// <returns>sThe newly created Franchise.</returns>
-        [HttpPost]
-        public async Task<ActionResult<ReadFranchiseDto>> PostFranchise(CreateFranchiseDto franchiseDto)
-        {
-            // Map dto to domain object
-            var franchise = _mapper.Map<Franchise>(franchiseDto);
-            var franchiseId = await _service.AddAsync(franchise);
-
-            return CreatedAtAction("GetFranchise", franchiseId, franchiseDto);
-        }
-
         // PUT: api/Franchises/5
         /// <summary>
         /// Update the Movies in a Franchise.
@@ -181,6 +171,8 @@ namespace FilmApi.Controllers
         /// <param name="movieIds">A list of Ids of the Movies belonging to the Franchise.</param>
         /// <returns></returns>
         [HttpPut("{id}/movies")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> UpdateFranchiseMovies(int id, [FromBody] IEnumerable<int> movieIds)
         {
             var franchise = await _service.GetByIdAsync(id);
@@ -195,6 +187,24 @@ namespace FilmApi.Controllers
             return Ok();
         }
 
+        // POST: api/Franchise
+        /// <summary>
+        /// Add a new Franchise.
+        /// </summary>
+        /// <param name="franchiseDto">The new Franchise object.</param>
+        /// <returns>sThe newly created Franchise.</returns>
+        [HttpPost]
+        [ProducesResponseType(201)]
+        public async Task<ActionResult<ReadFranchiseDto>> PostFranchise(CreateFranchiseDto franchiseDto)
+        {
+            // Map dto to domain object
+            var franchise = _mapper.Map<Franchise>(franchiseDto);
+            var franchiseId = await _service.AddAsync(franchise);
+
+            return CreatedAtAction("GetFranchise", franchiseId, franchiseDto);
+        }
+
+
         // DELETE: api/franchise/5
         /// <summary>
         /// Delete a Franchise.
@@ -202,6 +212,8 @@ namespace FilmApi.Controllers
         /// <param name="id">The Id of the Franchise you want to delete.</param>
         /// <returns>An Http status code depending on the outcome of the transaction.</returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteFranchise(int id)
         {
             if (!await _service.ExistsWithIdAsync(id))
@@ -216,7 +228,16 @@ namespace FilmApi.Controllers
                 return NotFound();
             }
 
-            await _service.DeleteAsync(deletedEntity);
+            var franchiseToDelete = await _service.IncludeMovies(id);
+
+            if (franchiseToDelete != null)
+            {
+                foreach (var m in franchiseToDelete.movies)
+                {
+                    m.FranchiseId = null;
+                }
+                await _service.DeleteAsync(franchiseToDelete);
+            }
 
             return NoContent();
         }

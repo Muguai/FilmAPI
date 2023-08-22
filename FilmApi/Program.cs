@@ -23,7 +23,36 @@ namespace FilmApi
                 opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+
+            // Add Swagger documentation
+            builder.Services.AddSwaggerGen(opt =>
+            {
+                opt.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Film API",
+                    Description = "An ASP.NET Core Web API for managing film data",
+                    /*
+                    TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Fredrik Hammar & Emma Hogstrand",
+                        Url = new Uri("https://example.com/contact")
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "MIT License",
+                        Url = new Uri("https://example.com/license")
+                    }
+                    */
+                });
+
+                // using System.Reflection;
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                opt.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+            });
+
+
 
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
@@ -37,8 +66,11 @@ namespace FilmApi
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwagger(); 
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "FilmApi v1");
+                });
             }
 
             app.UseHttpsRedirection();
